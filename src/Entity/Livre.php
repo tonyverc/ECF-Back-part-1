@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 class Livre
@@ -17,13 +20,29 @@ class Livre
     private ?string $titre = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $annee_edition = null;
+    private ?int $anneeEdition = null;
 
     #[ORM\Column]
-    private ?int $nombre_pages = null;
+    private ?int $nombrePages = null;
 
     #[ORM\Column(length: 190, nullable: true)]
-    private ?string $code_isbn = null;
+    private ?string $codeIsbn = null;
+
+    #[ORM\ManyToMany(targetEntity: Genre::class, mappedBy: 'livres')]
+    private Collection $genres;
+
+    #[ORM\ManyToOne(inversedBy: 'livres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?auteur $auteur = null;
+
+    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Emprunt::class)]
+    private Collection $emprunt;
+
+    public function __construct()
+    {
+        $this->genres = new ArrayCollection();
+        $this->emprunt = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,36 +63,105 @@ class Livre
 
     public function getAnneeEdition(): ?int
     {
-        return $this->annee_edition;
+        return $this->anneeEdition;
     }
 
-    public function setAnneeEdition(?int $annee_edition): static
+    public function setAnneeEdition(?int $anneeEdition): static
     {
-        $this->annee_edition = $annee_edition;
+        $this->anneeEdition = $anneeEdition;
 
         return $this;
     }
 
     public function getNombrePages(): ?int
     {
-        return $this->nombre_pages;
+        return $this->nombrePages;
     }
 
-    public function setNombrePages(int $nombre_pages): static
+    public function setNombrePages(int $nombrePages): static
     {
-        $this->nombre_pages = $nombre_pages;
+        $this->nombrePages = $nombrePages;
 
         return $this;
     }
 
     public function getCodeIsbn(): ?string
     {
-        return $this->code_isbn;
+        return $this->codeIsbn;
     }
 
-    public function setCodeIsbn(?string $code_isbn): static
+    public function setCodeIsbn(?string $codeIsbn): static
     {
-        $this->code_isbn = $code_isbn;
+        $this->codeIsbn = $codeIsbn;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Genre>
+     */
+    public function getGenres(): Collection
+    {
+        return $this->genres;
+    }
+
+    public function addGenre(Genre $genre): static
+    {
+        if (!$this->genres->contains($genre)) {
+            $this->genres->add($genre);
+            $genre->addLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGenre(Genre $genre): static
+    {
+        if ($this->genres->removeElement($genre)) {
+            $genre->removeLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function getAuteur(): ?auteur
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?auteur $auteur): static
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunt(): Collection
+    {
+        return $this->emprunt;
+    }
+
+    public function addEmprunt(Emprunt $emprunt): static
+    {
+        if (!$this->emprunt->contains($emprunt)) {
+            $this->emprunt->add($emprunt);
+            $emprunt->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmprunt(Emprunt $emprunt): static
+    {
+        if ($this->emprunt->removeElement($emprunt)) {
+            // set the owning side to null (unless already changed)
+            if ($emprunt->getLivre() === $this) {
+                $emprunt->setLivre(null);
+            }
+        }
 
         return $this;
     }

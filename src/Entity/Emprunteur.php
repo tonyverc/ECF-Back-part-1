@@ -3,11 +3,20 @@
 namespace App\Entity;
 
 use App\Repository\EmprunteurRepository;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmprunteurRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false, hardDelete: false)]
 class Emprunteur
 {
+    use TimestampableEntity;
+    use SoftDeleteableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,8 +31,16 @@ class Emprunteur
     #[ORM\Column(length: 190)]
     private ?string $telephone = null;
 
+    #[ORM\OneToMany(mappedBy: 'emprunteur', targetEntity: Emprunt::class)]
+    private Collection $emprunts;
+
     #[ORM\OneToOne(inversedBy: 'emprunteur', cascade: ['persist', 'remove'])]
-    private ?User $user_id = null;
+    private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->emprunts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -66,14 +83,44 @@ class Emprunteur
         return $this;
     }
 
-    public function getUserId(): ?User
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunts(): Collection
     {
-        return $this->user_id;
+        return $this->emprunts;
     }
 
-    public function setUserId(?User $user_id): static
+    public function addEmprunt(Emprunt $emprunt): static
     {
-        $this->user_id = $user_id;
+        if (!$this->emprunts->contains($emprunt)) {
+            $this->emprunts->add($emprunt);
+            $emprunt->setEmprunteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmprunt(Emprunt $emprunt): static
+    {
+        if ($this->emprunts->removeElement($emprunt)) {
+            // set the owning side to null (unless already changed)
+            if ($emprunt->getEmprunteur() === $this) {
+                $emprunt->setEmprunteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
