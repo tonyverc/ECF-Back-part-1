@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+<h1>Liste des utilisateurs</h1>
+    <table>
+        <thead>
+            <tr class="table-success">
+                <th scope="row"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID</font></font></th>
+                <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">NOM</font></font></td>
+                <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">EMAIL</font></font></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

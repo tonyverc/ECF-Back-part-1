@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Emprunteur;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -32,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $enabled = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Emprunteur $emprunteur = null;
 
     public function getId(): ?int

@@ -56,7 +56,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                   'nombrePages' => '100',
                   'codeIsbn' => '9785786930024',
                   'auteur' => $auteurs[0],
-                  'genres' => $genres[0]
+                  'genres' => $genre[0]
               ],
               [
                   'titre' => 'Consectetur adipiscing elit',
@@ -64,7 +64,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                   'nombrePages' => '150',
                   'codeIsbn' => '9783817260935',
                   'auteur' => $auteurs[1],
-                  'genres' => $genres[1]
+                  'genres' => $genre[1]
               ],
               [
                   'titre' => 'Mihi quidem Antiochum',
@@ -72,7 +72,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                   'nombrePages' => '200',
                   'codeIsbn' => '9782020493727',
                   'auteur' => $auteurs[2],
-                  'genres' => $genres[2]
+                  'genres' => $genre[2]
               ],
               [
                   'titre' => 'Quem audis satis belle',
@@ -80,7 +80,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                   'nombrePages' => '250',
                   'codeIsbn' => '9794059561353',
                   'auteur' => $auteurs[3],
-                  'genres' => $genres[3]
+                  'genres' => $genre[3]
               ],
               
           ];
@@ -92,11 +92,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
               $livre->setNombrePages($data['nombrePages']);
               $livre->setCodeIsbn($data['codeIsbn']);
               $livre->setAuteur($data['auteur']);
-              $livre->addGenre($data['genres']);            
+              $livre->addGenre($data['genre']);            
               
               $this->manager->persist($livre);
           }
-                $this->manager->flush();
+
+              $this->manager->flush();
           
           // données dynamiques
           for($i = 0; $i < 1000; $i++) {
@@ -119,7 +120,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
   
               $this->manager->persist($livre);
           }
-          $this->manager->flush();
+
+              $this->manager->flush();
       }
 
    public function loadGenres(): void{
@@ -186,6 +188,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             $genre->setDescription($data['description']);
             $this->manager->persist($genre);
         }
+
             $this->manager->flush();
        
    }
@@ -224,7 +227,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
            $auteur->setPrenom($this->faker->firstName);
            $this->manager->persist($auteur);
        }
-            $this->manager->flush();
+
+           $this->manager->flush();
    }
 
 
@@ -345,7 +349,8 @@ public function loadEmprunts() : void
 
         $this->manager->persist($emprunt);
     }
-    $this->manager->flush();
+
+        $this->manager->flush();
 
     // données dynamiques
     for($i = 0; $i < 200; $i++) {
@@ -363,6 +368,7 @@ public function loadEmprunts() : void
         
         $this->manager->persist($emprunt);
     }
+
         $this->manager->flush();
 }
  }

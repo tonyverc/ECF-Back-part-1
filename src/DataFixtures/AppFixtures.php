@@ -28,16 +28,16 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
       public function load(ObjectManager $manager): void
       {
            $this->manager = $manager;
-           $this-> loadAdmins();
+           $this->loadAdmins();
       }
 
       public function loadAdmins(): void{
        
         $datas = [
             ['email' => 'admin@example.com',
-            'role' => ['ROLE_ADMIN'],
-            'password' => '123',
-            'enabled' => true,
+             'role' => ['ROLE_ADMIN'],
+             'password' => '123',
+             'enabled' => true,
             ],
         ];
         
@@ -49,7 +49,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             $user->setPassword($password);
             $user->setEnabled($data['enabled']);
             $this->manager->persist($user);
-        }
+        } 
+        
             $this->manager->flush();
       }
   }
