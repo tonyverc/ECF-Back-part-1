@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for user in orderByMail %}
                 <tr>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
@@ -22,4 +22,28 @@
             {% endfor %}
         </tbody>
     </table>
+    
+<h1>Utilisateur dont l'id est 1</h1>
+    <h2>{{ user.email }} (id : {{ user.id }})</h2>
+
+<h1>Utilisateur dont l'email est foo.foo@example.com</h1>
+    {% for user in email %}
+    <h3>(user : {{ user.id }})</h3> 
+    {% endfor %}
+
+<h1>Utilisateur avec un role 'user' triés par ordre alphabétique d'email</h1>
+    {% for user in userRoles %}
+        (user : {{ user.roles | join(', ') }}) {{ user.email }}
+    {% endfor %}
+
+<h1>Utilisateur inactif</h1>
+    {% for user in userEnabled %}
+    <table>
+        <tr>
+            <td>{{ user.enabled }}</td>
+            <td>{{ user.email }}</td>
+        </tr>
+    </table>
+    {% endfor %}
+
 {% endblock %}

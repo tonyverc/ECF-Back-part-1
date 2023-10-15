@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Livres{% endblock %}
+
+{% block body %}
+
+    <h1>Liste des Livres triés par titre</h1>
+{% for livre in orderByTitre %}
+    
+    {{ livre.titre }}
+        
+{% endfor %}
+
+    <h1>Livre dont l'id est 1</h1>
+    <p> {{ livre.titre }} </p>
+
+<h1>Liste des Livres contenant le mot clé 'lorem' triés par titre</h1>
+{% for livre in title %}
+    
+     {{ livre.titre }}
+        
+{% endfor %}
+
+<h1>Liste des Livres dont l'id de l'auteur est 2 triés par titre</h1>
+{% for livre in livreAuthor %}
+    
+     {{ livre.titre }}
+        
+{% endfor %}
+
+
+{% endblock %} 
