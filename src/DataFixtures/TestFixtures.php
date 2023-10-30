@@ -56,31 +56,34 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                   'nombrePages' => '100',
                   'codeIsbn' => '9785786930024',
                   'auteur' => $auteurs[0],
-                  'genres' => $genre[0]
+                  'genres' => $genres[0]
               ],
+
               [
                   'titre' => 'Consectetur adipiscing elit',
                   'anneeEdition' => '2011',
                   'nombrePages' => '150',
                   'codeIsbn' => '9783817260935',
                   'auteur' => $auteurs[1],
-                  'genres' => $genre[1]
+                  'genres' => $genres[1]
               ],
+
               [
                   'titre' => 'Mihi quidem Antiochum',
                   'anneeEdition' => '2012',
                   'nombrePages' => '200',
                   'codeIsbn' => '9782020493727',
                   'auteur' => $auteurs[2],
-                  'genres' => $genre[2]
+                  'genres' => $genres[2]
               ],
+
               [
                   'titre' => 'Quem audis satis belle',
                   'anneeEdition' => '2013',
                   'nombrePages' => '250',
                   'codeIsbn' => '9794059561353',
                   'auteur' => $auteurs[3],
-                  'genres' => $genre[3]
+                  'genres' => $genres[3]
               ],
               
           ];
@@ -92,7 +95,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
               $livre->setNombrePages($data['nombrePages']);
               $livre->setCodeIsbn($data['codeIsbn']);
               $livre->setAuteur($data['auteur']);
-              $livre->addGenre($data['genre']);            
+              $livre->addGenre($data['genres']);            
               
               $this->manager->persist($livre);
           }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Genre;
 use App\Entity\Auteur;
 use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,7 +37,7 @@ class Livre
     #[ORM\JoinColumn(nullable: false)]
     private ?auteur $auteur = null;
 
-    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Emprunt::class)]
+    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Emprunt::class , cascade: ['persist', 'remove'])]
     private Collection $emprunt;
 
     public function __construct()

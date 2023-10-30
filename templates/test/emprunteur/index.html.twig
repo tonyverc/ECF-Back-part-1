@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunteur{% endblock %}
+
+{% block body %}
+    <h1>Emprunteur list</h1>
+
+    {% for emprunteur in orderByNom %}
+        <p> {{ emprunteur.nom }} {{ emprunteur.prenom }} </p>
+    {% endfor %}
+
+    <h1>Emprunteur avec l'id 3</h1>
+    <p>{{ emprunteur3.nom }} {{ emprunteur3.prenom }}</p>
+    
+{% endblock %}

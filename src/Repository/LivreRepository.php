@@ -3,6 +3,8 @@
 namespace App\Entity;
 namespace App\Repository;
 
+use Doctrine\ORM\EntityRepository;
+use App\Entity\Genre;
 use App\Entity\Livre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,9 +37,34 @@ class LivreRepository extends ServiceEntityRepository
                     ->orderBy('l.titre', 'ASC')
                     ->getQuery()
                     ->getResult();
+                
        ;
    }
 
+    public function findByAuthor(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.auteur = :auteurId')
+            ->setParameter('auteurId', 2)
+            ->orderBy('l.titre', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+                    
+    }
+
+    public function findByGenre($genre)
+    {
+        return $this->createQueryBuilder('l')
+        ->innerJoin('l.genres', 'g')
+        ->andwhere('g.nom LIKE :nom')
+        ->setParameter('nom',"%$genre%")
+        ->orderBy('l.titre', 'ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+        
+    }
 //    public function findOneBySomeField($value): ?Livre
 //    {
 //        return $this->createQueryBuilder('l')
