@@ -3,13 +3,31 @@
 {% block title %}Emprunteur{% endblock %}
 
 {% block body %}
-    <h1>Emprunteur list</h1>
+    <h1>Emprunteur liste</h1>
 
     {% for emprunteur in orderByNom %}
-        <p> {{ emprunteur.nom }} {{ emprunteur.prenom }} </p>
+         {{ emprunteur.nom }} {{ emprunteur.prenom }} 
     {% endfor %}
 
     <h1>Emprunteur avec l'id 3</h1>
     <p>{{ emprunteur3.nom }} {{ emprunteur3.prenom }}</p>
-    
+
+    <h1>Unique Emprunteur relié au user avec l'id 3</h1>
+    <p>{{ uniqueEmprunteur.nom }} {{ uniqueEmprunteur.prenom }}</p>
+
+    <h1>la liste des emprunteurs dont le nom ou le prénom contient le mot clé `foo`, triée par ordre alphabétique de nom et prénom</h1>
+    {% for emprunteur in emprunteurWord %}
+        <p> {{ emprunteur.nom }} {{ emprunteur.prenom }} </p>
+    {% endfor %}
+
+    <h1>la liste des emprunteurs dont le téléphone contient le mot clé `1234`, triée par ordre alphabétique de nom et prénom</h1>
+    {% for emprunteur in numberPhone %}
+        <p> {{ emprunteur.nom }} {{ emprunteur.prenom }} </p>
+    {% endfor %}
+
+    <h1>la liste des emprunteurs dont la date de création est antérieure au 01/03/2021 exclu triée par ordre alphabétique de nom et prénom</h1>
+    {% for emprunteur in emprunteurDate %}
+        <p> {{ emprunteur.nom }} {{ emprunteur.prenom }} </p>
+    {% endfor %}
+
 {% endblock %}

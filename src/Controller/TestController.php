@@ -86,22 +86,24 @@ class TestController extends AbstractController
         $livreAuthor = $LivreRepository->findByAuthor();  
         
         //liste des livres dont le genre contient le mot clé `roman`, triée par ordre alphabétique de titre
-        $genre = $LivreRepository->findByGenre('roman');
+        $genreLivre = $LivreRepository->findByGenre('roman');
 
         $auteur = $em->getRepository(Auteur::class)->find(2);
         $genre = $em->getRepository(Genre::class)->find(6);
 
         //création d'un nouveau livre
-        $livreNew = new Livre();
-        $livreNew->setTitre('Totum autem id externum');
-        $livreNew->setAnneeEdition(2020);
-        $livreNew->setNombrePages(300);
-        $livreNew->setCodeIsbn('9790412882714');
-        $livreNew->setAuteur($auteur);
-        $livreNew->addGenre($genre);
-        $em->persist($livreNew);
+        $livreNew = new Livre();{
 
-        $em->flush();
+            $livreNew->setTitre('Totum autem id externum');
+            $livreNew->setAnneeEdition(2020);
+            $livreNew->setNombrePages(300);
+            $livreNew->setCodeIsbn('9790412882714');
+            $livreNew->setAuteur($auteur);
+            $livreNew->addGenre($genre);
+            $em->persist($livreNew);
+        }
+
+            $em->flush();
 
         //mise a jour du livre avec l'id 2
         $livre2 = $em->getRepository(Livre::class)->find(2);
@@ -131,7 +133,7 @@ class TestController extends AbstractController
           'livre' => $livre,
           'title' => $title,
           'livreAuthor' => $livreAuthor,
-          'genre' => $genre,
+          'genreLivre' => $genreLivre
         ]);
     }
     
@@ -155,12 +157,88 @@ class TestController extends AbstractController
         //l'emprunteur dont l'id est 3
         $emprunteur3 = $EmprunteurRepository->find(3);
 
+        //l'unique emprunteur qui est relié au user dont l'id est `3`
+        $uniqueEmprunteur = $EmprunteurRepository->findById(3);
+
+        //- la liste des emprunteurs dont le nom ou le prénom contient le mot clé `foo`, triée par ordre alphabétique de nom et prénom
+        $emprunteurWord = $EmprunteurRepository->findEmprunteursWithMotCle('foo');
+
+        //la liste des emprunteurs dont le téléphone contient le mot clé `1234`, triée par ordre alphabétique de nom et prénom
+        $numberPhone = $EmprunteurRepository->findNumberPhone();
+
+        //la liste des emprunteurs dont la date de création est antérieure au 01/03/2021 exclu (c-à-d strictement plus petit), triée par ordre alphabétique de nom et prénom
+        $emprunteurDate = $EmprunteurRepository->findEmprunteursByDate();
+
         //affichage des resultat dans le template test/emprunteur/index.html.twig
         return $this->render('test/emprunteur/index.html.twig', [
           'orderByNom' => $orderByNom,
-          'emprunteur3' => $emprunteur3
+          'emprunteur3' => $emprunteur3,
+          'uniqueEmprunteur' => $uniqueEmprunteur,
+          'emprunteurWord' => $emprunteurWord,
+          'numberPhone' => $numberPhone,
+          'emprunteurDate' => $emprunteurDate
         ]);
 
     }
-};
+
+    #[Route('/emprunt', name: 'emprunt_test')]
+     public function index4(): Response
+    {
+        return $this->render('test/emprunt/index.html.twig', [
+            'controller_name' => 'TestController',
+        ]);
+    }
+
+    #[Route('/emprunt', name: 'emprunt_test')]
+    public function emprunt( ManagerRegistry $doctrine ): Response
+    {
+        $em = $doctrine->getManager();
+        $EmpruntRepository= $em->getRepository(Emprunt::class);
+
+        //la liste des 10 derniers emprunts au niveau chronologique, triée par ordre **décroissant** de date d'emprunt 
+        $empruntList = $EmpruntRepository->findLast10Emprunts();
+
+        //la liste des emprunts de l'emprunteur dont l'id est `2`, triée par ordre **croissant** de date d'emprunt
+        $empruntUser2 = $EmpruntRepository->findEmprunt();
+
+        //la liste des emprunts du livre dont l'id est `3`, triée par ordre **décroissant** de date d'emprunt
+        $empruntLivre3 = $EmpruntRepository->findEmpruntsLivre3();
+
+        // la liste des 10 derniers emprunts qui ont été retournés, triée par ordre **décroissant** de date de retour
+        $empruntRetour = $EmpruntRepository->findDerniersEmpruntsRetournes();
+
+        //la liste des emprunts qui n'ont pas encore été retournés triée par ordre **croissant** de date d'emprunt
+        $empruntNonRetour = $EmpruntRepository->findEmpruntsNonRetournesTriesParDate();
+
+        //l'unique emprunt relié au livre dont l'id est `3`
+        $uniqueEmprunt = $EmpruntRepository->findEmpruntByLivreId(3);
+
+        //création nouvelle emprunt
+        //Récupérer l'emprunteur et le livre par leurs ID
+         $emprunteur = $entityManager->getRepository(Emprunteur::class)->find(1); 
+         $livre = $entityManager->getRepository(Livre::class)->find(1); 
+ 
+         // Créer un nouvel emprunt
+         $emprunt = new Emprunt();
+         $emprunt->setDateEmprunt(new \DateTime('2020-12-01 16:00:00'));
+         $emprunt->setEmprunteur($emprunteur);
+         $emprunt->setLivre($livre);
+ 
+         // Persister l'emprunt dans la base de données
+         $entityManager->persist($emprunt);
+         $entityManager->flush();
+    
+
+        return $this->render('test/emprunt/index.html.twig', [
+          'empruntList' => $empruntList,
+          'empruntUser2' => $empruntUser2,
+          'empruntLivre3' => $empruntLivre3,
+          'empruntRetour' => $empruntRetour,
+          'empruntNonRetour' => $empruntNonRetour,
+          'uniqueEmprunt' => $uniqueEmprunt
+        ]);
+
+    }
+
+}
     

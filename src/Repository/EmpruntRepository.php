@@ -21,28 +21,61 @@ class EmpruntRepository extends ServiceEntityRepository
         parent::__construct($registry, Emprunt::class);
     }
 
-//    /**
-//     * @return Emprunt[] Returns an array of Emprunt objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findLast10Emprunts()
+    {
+        return $this->createQueryBuilder('e')
+        ->orderBy('e.dateEmprunt', 'DESC') // Tri décroissant par date d'emprunt
+        ->setMaxResults(10) // Limiter à 10 résultats
+        ->getQuery()
+        ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Emprunt
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findEmprunt()
+    {
+        return $this->createQueryBuilder('e')
+        ->andWhere('e.emprunteur = :emprunteurId')
+        ->setParameter('emprunteurId', 2)
+        ->orderBy('e.dateEmprunt', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findEmpruntsLivre3()
+    {
+    return $this->createQueryBuilder('e')
+        ->andWhere('e.livre = :livreId')
+        ->setParameter('livreId', 3)
+        ->orderBy('e.dateEmprunt', 'DESC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findDerniersEmpruntsRetournes()
+    {
+    return $this->createQueryBuilder('e')
+        ->where('e.dateRetour IS NOT NULL')
+        ->orderBy('e.dateRetour', 'DESC')
+        ->setMaxResults(10)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findEmpruntsNonRetournesTriesParDate()
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.dateRetour IS NULL')
+            ->orderBy('e.dateEmprunt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findEmpruntByLivreId($livreId)
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.livre', 'l')
+            ->where('l.id = :livreId')
+            ->setParameter('livreId', $livreId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

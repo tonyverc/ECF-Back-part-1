@@ -29,9 +29,9 @@
 {% endfor %}
 
 <h1>liste des livres dont le genre contient le mot clé `roman`, triée par ordre alphabétique de titre</h1>
-{% for livre in genre %}
+{% for livre in genreLivre %}
     
-     <p>{{ livre.titre }} {{ livre.genre }}</p>
+     {{ livre.titre }}
         
 {% endfor %}
 
