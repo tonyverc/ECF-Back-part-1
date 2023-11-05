@@ -29,7 +29,10 @@
 {% endfor %}
 
 <h1>l'unique emprunt relié au livre dont l'id est `3`</h1>
-    ID:{{ uniqueEmprunt.id }} - {{ uniqueEmprunt.dateEmprunt|date('Y-m-d H:i:s') }}
+ {% for emprunt in uniqueEmprunt %}
+    <li> ID : {{ emprunt.id }} - {{ emprunt.dateEmprunt|date('Y-m-d H:i:s') }}</li>
+{% endfor %}
+    
 
 
 

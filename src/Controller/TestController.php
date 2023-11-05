@@ -194,6 +194,8 @@ class TestController extends AbstractController
     {
         $em = $doctrine->getManager();
         $EmpruntRepository= $em->getRepository(Emprunt::class);
+        $LivreRepository= $em->getRepository(Livre::class);
+        $EmprunteurRepository= $em->getRepository(Emprunteur::class);
 
         //la liste des 10 derniers emprunts au niveau chronologique, triée par ordre **décroissant** de date d'emprunt 
         $empruntList = $EmpruntRepository->findLast10Emprunts();
@@ -213,21 +215,38 @@ class TestController extends AbstractController
         //l'unique emprunt relié au livre dont l'id est `3`
         $uniqueEmprunt = $EmpruntRepository->findEmpruntByLivreId(3);
 
-        //création nouvelle emprunt
-        //Récupérer l'emprunteur et le livre par leurs ID
-         $emprunteur = $entityManager->getRepository(Emprunteur::class)->find(1); 
-         $livre = $entityManager->getRepository(Livre::class)->find(1); 
- 
-         // Créer un nouvel emprunt
-         $emprunt = new Emprunt();
-         $emprunt->setDateEmprunt(new \DateTime('2020-12-01 16:00:00'));
-         $emprunt->setEmprunteur($emprunteur);
-         $emprunt->setLivre($livre);
- 
-         // Persister l'emprunt dans la base de données
-         $entityManager->persist($emprunt);
-         $entityManager->flush();
-    
+        // Créez un nouvel emprunt
+        $emprunt = new Emprunt();
+        $emprunt->setDateEmprunt(new \DateTime('2020-12-01 16:00:00'));
+        $emprunt->setDateRetour(null); // Aucune date de retour définie
+        $emprunteur = $EmprunteurRepository->find(1); 
+        $emprunt->setEmprunteur($emprunteur);
+        $livre = $LivreRepository->find(1); 
+        $emprunt->setLivre($livre);
+        $em->persist($emprunt);
+
+        $em->flush();
+
+        //Requêtes de mise à jour
+        $emprunt3 = $EmpruntRepository->find(3);
+         // Vérifiez si l'emprunt existe
+         if (!$emprunt3) {
+            throw $this->createNotFoundException('Emprunt non trouvé avec l\'ID ' . $emprunt3);
+        }
+
+        // Mettez à jour la date de retour
+        $emprunt3->setDateRetour(new \DateTime('2020-05-01 10:00:00'));
+        $em->flush();
+
+        //supprimer l'emprunt dont l'id est `42`
+        $emprunt42 = $EmpruntRepository->find(42);
+        if (!$emprunt42) {
+            throw $this->createNotFoundException('Emprunt non trouvé avec l\'ID ' . $emprunt42);
+        }
+
+        // Supprimez l'emprunt
+        $em->remove($emprunt42);
+        $em->flush();
 
         return $this->render('test/emprunt/index.html.twig', [
           'empruntList' => $empruntList,

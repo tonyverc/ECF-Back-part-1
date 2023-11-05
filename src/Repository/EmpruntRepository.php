@@ -72,10 +72,9 @@ class EmpruntRepository extends ServiceEntityRepository
     public function findEmpruntByLivreId($livreId)
     {
         return $this->createQueryBuilder('e')
-            ->join('e.livre', 'l')
-            ->where('l.id = :livreId')
+            ->where('e.livre = :livreId')
             ->setParameter('livreId', $livreId)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }
