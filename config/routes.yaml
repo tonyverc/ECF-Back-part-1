@@ -5,3 +5,22 @@
 test_list_users:
     path: /test
     controller: App\Controller\TestController::listUsers
+
+# config/routes.yaml
+
+home:
+    path: /
+    controller: App\Controller\MainController::index
+
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+user_list:
+    path: /user/list
+    controller: App\Controller\UserController::list
+    # Ajoutez d'autres routes pour les livres, auteurs, genres, emprunteurs, emprunts, etc.

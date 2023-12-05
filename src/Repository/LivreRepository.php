@@ -75,10 +75,3 @@ class LivreRepository extends ServiceEntityRepository
 //        ;
 //    }
 }
-class Author {
-    /**
-     * @var string A "Y-m-d H:i:s" formatted value
-     */
-    // #[Assert\DateTime]
-    protected string $createdAt;
-};

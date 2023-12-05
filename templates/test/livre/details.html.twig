@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du livre{% endblock %}
+
+{% block body %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Détails du livre</title>
+</head>
+<body>
+    <h1>Détails du livre</h1>
+    <h2>{{ livre.titre }}</h2>
+    <p>Année d'édition : {{ livre.anneeEdition }}</p>
+    <p>Nombre de pages : {{ livre.nombrePages }}</p>
+    <p>Code ISBN : {{ livre.codeIsbn }}</p>
+    <p>Auteur : {{ livre.auteur.nom }}</p>
+    <p>Genre : {% for genre in livre.genres %}{{ genre.nom }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+    
+    {% if disponible %}
+        <p>Disponible : Oui</p>
+    {% else %}
+        <p>Disponible : Non</p>
+    {% endif %}
+</body>
+</html>
+
+{% endblock %}

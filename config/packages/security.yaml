@@ -20,7 +20,8 @@ security:
             provider: app_user_provider
             custom_authenticator: App\Security\UserAuthenticator
             logout:
-                path: app_logout
+                path: logout
+                target: Accueil
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -35,12 +36,16 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+    
+            # Easy way to control access for large sections of your site
+            # Note: Only the *first* access control that matches will be used
+    role_hierarchy:
+        ROLE_USER: emprunteur
+        ROLE_ADMIN: administrateur
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/liste_emprunts, roles: ROLE_ADMIN or ROLE_USER }
 
 when@test:
     security:

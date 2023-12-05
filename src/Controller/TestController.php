@@ -17,16 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/test')]
 class TestController extends AbstractController
-{
-    #[Route('/user', name: 'user_test')]
-    public function index(): Response
-    {
-        return $this->render('test/user/index.html.twig', [
-            'controller_name' => 'TestController',
-        ]);
-    }
-
-    
+{    
     #[Route('/user', name: 'user_test')]
     public function user( ManagerRegistry $doctrine): Response
     {
@@ -126,6 +117,7 @@ class TestController extends AbstractController
             $em->flush();
         }
 
+        // utiliser un bloc try catch dans le cas present si un objet est relier a un autre dans la bdd
 
         //affichage des resultat dans le template test/livre/index.html.twig
         return $this->render('test/livre/index.html.twig', [
@@ -257,6 +249,13 @@ class TestController extends AbstractController
           'uniqueEmprunt' => $uniqueEmprunt
         ]);
 
+    }
+
+    #[Route('/emprunt', name: 'liste_emprunts')]
+        public function listeEmprunts(): Response{
+
+            $empruntList = $EmpruntRepository->findAll();
+        
     }
 
 }

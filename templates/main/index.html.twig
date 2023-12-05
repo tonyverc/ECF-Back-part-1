@@ -3,28 +3,86 @@
 {% block title %}Bienvenue{% endblock %}
 
 {% block body %}
+<header>
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Accueil</font></font></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Basculer la navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Caractéristiques</font></font></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">À propos</font></font></a>
-        </li>
+      <ul>
+        <li><a href="{{ path('home') }}">Accueil</a></li>
+            
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('user_list') }}">Liste des utilisateurs</a></li>
+                    <!-- Ajoutez d'autres liens pour les livres, auteurs, genres, emprunteurs, emprunts, etc. -->
+                    <li><span>Bienvenue {{ app.user.username }} ({{ 'Administrateur'|trans }})</span></li>
+                {% elseif is_granted('ROLE_USER') %}
+                    <li><span>Bienvenue {{ app.user.username }} ({{ 'Emprunteur'|trans }})</span></li>
+                {% else %}
+                    <li><span>Bienvenue {{ app.user.username }}</span></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{{ path('login') }}">Connexion</a></li>
+            {% endif %}
+        </ul>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-sm-2" type="search" placeholder="Recherche">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Recherche</font></font></button>
-      </form>
     </div>
   </div>
 </nav>
-<h1>Bibliothéque</h1>
+{% block content %}
+    <h1>Bienvenue sur la page d'accueil</h1>
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <p>Bienvenue, {{ app.user.username }}!</p>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <p>Vous êtes un administrateur.</p>
+            {# Affichez des liens supplémentaires pour les administrateurs #}
+        {% elseif is_granted('ROLE_USER') %}
+            <p>Vous êtes un emprunteur.</p>
+            {# Affichez des liens supplémentaires pour les emprunteurs #}
+        {% endif %}
+    {% else %}
+        <p>Veuillez vous connecter.</p>
+    {% endif %}
+</header>
+{% endblock %}
+
+{% if is_granted('ROLE_ADMIN') %}
+    <li><a href="{{ path('/user/') }}">Liste des utilisateurs</a></li>
+    <li><a href="{{ path('/livre/') }}">Liste des livres</a></li>
+    <li><a href="{{ path('/auteur/') }}">Liste des auteurs</a></li>
+    <li><a href="{{ path('/genre/') }}">Liste des genres</a></li>
+    <li><a href="{{ path('/emprunteur/') }}">Liste des emprunteurs</a></li>
+    <li><a href="{{ path('/emprunt/') }}">Liste des emprunts</a></li>
+{% endif %}
+
+{# Affichage de la liste des livres sur la page d'accueil meme si l'utilisateur/admin n'est pas connecté #}
+<h1>Catalogue des livres</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Année d'édition</th>
+                <th>Nombre de pages</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livre in livres %}
+            <tr>
+                <td><a href="{{ path('details_livre', {'id': livre.id}) }}">{{ livre.titre }}</a></td>
+                <td>{{ livre.auteur.nom }}</td>
+                <td>{{ livre.anneeEdition }}</td>
+                <td>{{ livre.nombrePages }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
